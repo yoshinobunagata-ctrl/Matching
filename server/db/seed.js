@@ -179,14 +179,14 @@ async function seed() {
 
   // デモユーザーへのいいねを追加 (期待感を演出)
   const demoUser = db.prepare('SELECT id FROM users WHERE email = ?').get('demo@example.com');
-  const allUsers = db.data.users.filter(u => u.gender === 'female');
+  const femaleUserIds = femaleUsers.map((_, index) => index + 1); // IDs: 1-10
 
   const insertLike = db.prepare('INSERT INTO likes (from_user_id, to_user_id) VALUES (?, ?)');
 
   // 女性からデモユーザーへのいいね (70%の確率)
-  for (const female of allUsers) {
+  for (const femaleId of femaleUserIds) {
     if (Math.random() > 0.3) {
-      insertLike.run(female.id, demoUser.id);
+      insertLike.run(femaleId, demoUser.id);
     }
   }
 
